@@ -4,11 +4,12 @@ const Schema = mongoose.Schema;
 const wallet = new Schema(
   {
     date: {
-      type: String,
+      type: Date,
       required: [true, 'date is required'],
     },
     type: {
       type: String,
+      required: [true, 'type is required'],
     },
     category: {
       type: String,
@@ -18,7 +19,7 @@ const wallet = new Schema(
       type: String,
     },
     sum: {
-      type: String,
+      type: Number,
       required: [true, 'sum is required'],
     },
   },
