@@ -5,10 +5,35 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
-const register = async (req, res, next) => {
+const signup = async (req, res, next) => {
   try {
-    // uzupełnić
-    res.status(201).json({ ok: 'ok' });
+    const { email, password, firstName } = req.body;
+
+    const isValid = JoiSchema.allRequired.validate({
+      email,
+      password,
+      firstName,
+    });
+    if (isValid.error) {
+      return res.status(400).json({
+        message: isValid.error.details[0].message,
+      });
+    }
+
+    const isExist = await userService.getUserByEmail({ email });
+    if (isExist) {
+      return res.status(400).json({
+        message: 'Email already exist',
+      });
+    }
+
+    const user = await userService.addUser({
+      email,
+      password,
+      firstName,
+    });
+
+    res.status(201).json({ user });
   } catch (err) {
     console.error(err);
     next(err);
@@ -36,7 +61,7 @@ const logout = async (req, res, next) => {
 };
 
 module.exports = {
-  register,
+  signup,
   login,
   logout,
 };
