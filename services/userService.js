@@ -24,7 +24,16 @@ const getUserByEmail = ({ email }) => {
   }
 };
 
+const updateUserToken = ({ _id, body }) => {
+  try {
+    return User.findOneAndUpdate({ _id }, body, { new: true });
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   addUser,
   getUserByEmail,
+  updateUserToken,
 };

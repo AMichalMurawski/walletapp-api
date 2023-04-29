@@ -2,7 +2,9 @@ const userService = require('../services/userService');
 const JoiSchema = require('../schemas/usersSchema');
 const nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+
+const secret = process.env.SECRET;
 
 require('dotenv').config();
 
@@ -81,9 +83,17 @@ const login = async (req, res, next) => {
       });
     }
 
+    const payload = {
+      id: user._id,
+      username: user.email,
+    };
+    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+    await userService.updateUserToken({ _id: user._id, body: { token } });
+
     const { firstName } = user;
 
     res.json({
+      token,
       user: {
         email,
         firstName,
