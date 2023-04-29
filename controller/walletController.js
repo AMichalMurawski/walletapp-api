@@ -1,6 +1,39 @@
 const walletService = require('../services/walletService');
 const JoiSchema = require('../schemas/walletSchema');
 
+const create = async (req, res, next) => {
+  try {
+    const { _id } = await req.user;
+    let { date, type, category, comment, sum } = await req.body;
+
+    const isValid = JoiSchema.allRequired.validate({
+      date,
+      type,
+      category,
+      comment,
+      sum,
+    });
+    if (isValid.error) {
+      return res.status(400).json({
+        message: isValid.error.details[0].message,
+      });
+    }
+
+    const transaction = await walletService.addTransaction({
+      date,
+      type,
+      category,
+      comment,
+      sum,
+      owner: _id,
+    });
+    res.status(201).json({ transaction });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
 // ===> Schemat dodania (...props zamień na poszczególne dane) <===
 // const create = async (req, res, next) => {
 //   try {
@@ -38,4 +71,4 @@ const JoiSchema = require('../schemas/walletSchema');
 //       return;
 //     }
 
-module.exports = {};
+module.exports = { list, create };
