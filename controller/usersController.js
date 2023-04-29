@@ -107,7 +107,20 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    // uzupełnić
+    const { _id } = req.user;
+
+    const user = await userService.getUserById({ _id });
+    if (!user) {
+      return res.status(401).json({
+        message: 'Not authorized',
+      });
+    }
+
+    await userService.updateUserToken({
+      _id,
+      body: { token: null },
+    });
+
     res.status(204).json();
   } catch (err) {
     console.error(err);

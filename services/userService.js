@@ -24,6 +24,14 @@ const getUserByEmail = ({ email }) => {
   }
 };
 
+const getUserById = ({ _id }) => {
+  try {
+    return User.findOne({ _id });
+  } catch (err) {
+    return false;
+  }
+};
+
 const updateUserToken = ({ _id, body }) => {
   try {
     return User.findOneAndUpdate({ _id }, body, { new: true });
@@ -35,5 +43,6 @@ const updateUserToken = ({ _id, body }) => {
 module.exports = {
   addUser,
   getUserByEmail,
+  getUserById,
   updateUserToken,
 };
