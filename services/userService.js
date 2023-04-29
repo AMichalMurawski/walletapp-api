@@ -3,12 +3,13 @@ const User = require('../models/usersModel');
 // do zrobienia rejestracja / logowanie / wylogowanie
 // opcjonalnie odzyskanie hasła
 
-const addUser = ({ email, password, firstName }) => {
+const addUser = ({ email, password, firstName, walletId }) => {
   try {
     return User.create({
       email,
       password,
-      firstNam: firstName,
+      firstName,
+      walletId,
     });
   } catch (err) {
     return false;

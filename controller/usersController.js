@@ -1,7 +1,8 @@
 const userService = require('../services/userService');
 const JoiSchema = require('../schemas/usersSchema');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const machineId = require('node-machine-id');
+// const bcrypt = require('bcrypt');
+// const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
@@ -27,10 +28,13 @@ const signup = async (req, res, next) => {
       });
     }
 
+    const walletId = await machineId.machineId(true);
+
     const user = await userService.addUser({
       email,
       password,
       firstName,
+      walletId,
     });
 
     res.status(201).json({ user });
@@ -42,8 +46,48 @@ const signup = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    // uzupełnić
-    res.json({ ok: 'ok' });
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: 'Email and password is required',
+      });
+    }
+    const isValid = JoiSchema.atLeastOne.validate({
+      email,
+      password,
+    });
+    if (isValid.error) {
+      return res.status(400).json({
+        message: isValid.error.details[0].message,
+      });
+    }
+
+    const user = await userService.getUserByEmail({
+      email,
+    });
+    if (!user) {
+      return res.status(401).json({
+        message: 'Email or password is wrong',
+      });
+    }
+
+    const match = user.password === password;
+    if (!match) {
+      return res.status(401).json({
+        message: 'Email or password is wrong',
+      });
+    }
+
+    const { firstName, walletId } = user;
+
+    res.json({
+      user: {
+        email,
+        firstName,
+        walletId,
+      },
+    });
   } catch (err) {
     console.error(err);
     next(err);

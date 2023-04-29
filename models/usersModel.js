@@ -16,6 +16,10 @@ const user = new Schema(
       type: String,
       required: [true, 'Password is required'],
     },
+    walletId: {
+      type: String,
+      required: [true, 'MachineId is required'],
+    },
   },
   {
     versionKey: false,
