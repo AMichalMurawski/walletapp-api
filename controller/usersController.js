@@ -128,8 +128,31 @@ const logout = async (req, res, next) => {
   }
 };
 
+const actualuser = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+
+    const user = await userService.getUserById({ _id });
+    if (!user) {
+      return res.status(401).json({
+        message: 'Not authorized',
+      });
+    }
+
+    const { email, firstName } = user;
+    res.status(201).json({
+      email,
+      firstName,
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
 module.exports = {
   signup,
   login,
   logout,
+  actualuser,
 };
