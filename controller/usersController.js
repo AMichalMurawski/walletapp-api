@@ -1,7 +1,7 @@
 const userService = require('../services/userService');
 const JoiSchema = require('../schemas/usersSchema');
-const machineId = require('node-machine-id');
-// const bcrypt = require('bcrypt');
+const nanoid = require('nanoid');
+const bcrypt = require('bcrypt');
 // const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
@@ -28,11 +28,13 @@ const signup = async (req, res, next) => {
       });
     }
 
-    const walletId = await machineId.machineId(true);
+    const walletId = await nanoid.nanoid();
+
+    const hash = await bcrypt.hash(password, 15);
 
     const user = await userService.addUser({
       email,
-      password,
+      password: hash,
       firstName,
       walletId,
     });
@@ -72,20 +74,19 @@ const login = async (req, res, next) => {
       });
     }
 
-    const match = user.password === password;
+    const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(401).json({
         message: 'Email or password is wrong',
       });
     }
 
-    const { firstName, walletId } = user;
+    const { firstName } = user;
 
     res.json({
       user: {
         email,
         firstName,
-        walletId,
       },
     });
   } catch (err) {
