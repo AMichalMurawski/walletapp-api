@@ -3,14 +3,26 @@ const Schema = mongoose.Schema;
 
 const user = new Schema(
   {
-    password: {
+    firstName: {
       type: String,
-      required: [true, 'Password is required'],
+      required: [true, 'First name is required'],
     },
     email: {
       type: String,
       required: [true, 'Email is required'],
       unique: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+    },
+    token: {
+      type: String,
+      default: null,
+    },
+    walletId: {
+      type: String,
+      required: [true, 'MachineId is required'],
     },
   },
   {

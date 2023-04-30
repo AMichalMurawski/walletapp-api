@@ -7,7 +7,7 @@ const custom = Joi.defaults(() =>
 );
 
 // walidacja dla dowolnego propsa (należy tutaj podać wszystkie)
-const atLeastOne = custom.object().or('props1', 'props2', '...');
+const atLeastOne = custom.object().or();
 
 // walidacja dla wymaganych wszystkich propsów
 const allRequired = custom
