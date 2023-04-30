@@ -4,5 +4,6 @@ const walletController = require('../../controller/walletController');
 // const auth = require('../../middlewares/userAuth');
 
 // router.get('/', auth, walletController.get); // przy pisaniu pomiń auth, wrzucimy go gdy przygotuję logowanie i rejestrację
+router.post('/', walletController.create);
 
 module.exports = router;

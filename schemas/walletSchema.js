@@ -1,16 +1,34 @@
 const Joi = require('joi');
 
-const custom = Joi.defaults(() =>
+const wallet = Joi.defaults(() =>
   Joi.object({
-    // do uzupełnienia
+    date: Joi.date().required(),
+    type: Joi.string().valid('income', 'expense').required(),
+    category: Joi.string()
+      .valid(
+        'main expenses',
+        'products',
+        'car',
+        'self care',
+        'child care',
+        'household products',
+        'education',
+        'leisure',
+        'other expenses'
+      )
+      .required(),
+    comment: Joi.string(),
+    sum: Joi.number().min(1).required(),
   })
 );
 
 // walidacja dla dowolnego propsa (należy tutaj podać wszystkie)
-const atLeastOne = custom.object().or();
+const atLeastOne = wallet
+  .object()
+  .or('date', 'type', 'category', 'comment', 'sum');
 
 // walidacja dla wymaganych wszystkich propsów
-const allRequired = custom
+const allRequired = wallet
   .object()
   .options({ presence: 'required' })
   .required();

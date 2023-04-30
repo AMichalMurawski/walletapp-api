@@ -1,7 +1,6 @@
 const Wallet = require('../models/walletModel');
 
-// Schemat
-// const addPayment = ({ ...props }) =>
-//   Wallet.create({ ...props });
+const addTransaction = ({ date, type, category, comment, sum, owner }) =>
+  Wallet.create({ date, type, category, comment, sum, owner });
 
-module.exports = {};
+module.exports = { addTransaction };
