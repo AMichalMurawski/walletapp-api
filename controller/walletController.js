@@ -71,4 +71,4 @@ const create = async (req, res, next) => {
 //       return;
 //     }
 
-module.exports = { list, create };
+module.exports = { create };
