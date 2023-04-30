@@ -3,12 +3,16 @@ const router = express.Router();
 const userController = require('../../controller/usersController');
 const auth = require('../../middlewares/userAuth');
 
-router.post('/signup', userController.signup);
+router.post('/sign-up', userController.signup);
 
-router.post('/login', userController.login);
+router.post('/sign-in', userController.signin);
 
-router.get('/logout', auth, userController.logout);
+router.get('/sign-out', auth, userController.signout);
 
-router.get('/actualuser', auth, userController.actualuser);
+router.get('/current', auth, userController.currentUser);
+
+router.get('/verify/:verificationToken', userController.verifyToken);
+
+router.post('verify', userController.repeatVerification);
 
 module.exports = router;
