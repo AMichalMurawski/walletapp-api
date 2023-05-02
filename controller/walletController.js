@@ -1,36 +1,33 @@
+const nanoid = require('nanoid');
 const walletService = require('../services/walletService');
-const JoiSchema = require('../schemas/walletSchema');
+const { walletSchema } = require('../schemas/walletSchema');
 
-const create = async (req, res, next) => {
+const createWallet = async (req, res, next) => {
   try {
-    const { _id } = await req.user;
-    let { date, type, category, comment, sum } = await req.body;
-
-    const isValid = JoiSchema.allRequired.validate({
-      date,
-      type,
-      category,
-      comment,
-      sum,
-    });
-    if (isValid.error) {
-      return res.status(400).json({
-        message: isValid.error.details[0].message,
-      });
+    const userId = req.user && req.user._id;
+    if (!userId) {
+      throw new Error('User not found');
     }
 
-    const transaction = await walletService.addTransaction({
-      date,
-      type,
-      category,
-      comment,
-      sum,
-      owner: _id,
+    const { error } = walletSchema.validate({ _id: userId });
+    if (error) {
+      throw new Error(error.details[0].message);
+    }
+
+    const wallet = await walletService.createWallet({
+      walletId: nanoid.nanoid(10),
+      balance: 0,
+      transactions: [],
+      owners: [userId],
     });
-    res.status(201).json({ transaction });
-  } catch (err) {
-    console.error(err);
-    next(err);
+    if (!wallet) {
+      throw new Error('Failed to create wallet');
+    }
+
+    res.status(201).json({ walletId: wallet.walletId });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 };
 
@@ -71,4 +68,4 @@ const create = async (req, res, next) => {
 //       return;
 //     }
 
-module.exports = { create };
+module.exports = { createWallet };
