@@ -11,7 +11,7 @@ const transactionSchema = new Schema({
 
 const walletSchema = new Schema({
   walletId: { type: String, required: true },
-  balance: { type: Number, required: true },
+  balance: { type: Number },
   transactions: [transactionSchema],
   owners: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
