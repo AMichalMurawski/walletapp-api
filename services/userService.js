@@ -40,9 +40,22 @@ const updateUserToken = ({ _id, body }) => {
   }
 };
 
+const verifyToken = ({ verificationToken }) => {
+  try {
+    return User.findOneAndUpdate(
+      { verificationToken },
+      { verify: true, verificationToken: null },
+      { new: true }
+    );
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   addUser,
   getUserByEmail,
   getUserById,
   updateUserToken,
+  verifyToken,
 };

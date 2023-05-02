@@ -24,6 +24,14 @@ const user = new Schema(
       type: String,
       required: [true, 'MachineId is required'],
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+    },
   },
   {
     versionKey: false,
