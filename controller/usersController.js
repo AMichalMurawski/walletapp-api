@@ -4,7 +4,6 @@ const nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
-const { createWallet } = require('./walletController');
 
 const secret = process.env.SECRET;
 sgMail.setApiKey(process.env.SENDGRID_TOKEN);
@@ -49,8 +48,6 @@ const signup = async (req, res, next) => {
         message: 'User not created',
       });
     }
-
-    const wallet = await createWallet(user._id);
 
     const verificationToken = nanoid.nanoid();
     const verificationURL = `${req.protocol}://${req.get(
