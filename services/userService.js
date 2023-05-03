@@ -26,7 +26,15 @@ const getUserByEmail = ({ email }) => {
 
 const getUserById = ({ _id }) => {
   try {
-    return User.findOne({ _id });
+    return User.findOne({ _id: _id }).exec();
+  } catch (err) {
+    return false;
+  }
+};
+
+const getUserByRefreshToken = ({ refreshToken }) => {
+  try {
+    return User.findOne({ refreshToken });
   } catch (err) {
     return false;
   }
@@ -56,6 +64,7 @@ module.exports = {
   addUser,
   getUserByEmail,
   getUserById,
+  getUserByRefreshToken,
   updateUser,
   verifyToken,
 };
