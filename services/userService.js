@@ -3,13 +3,13 @@ const User = require('../models/usersModel');
 // do zrobienia rejestracja / logowanie / wylogowanie
 // opcjonalnie odzyskanie hasła
 
-const addUser = ({ email, password, firstName, walletId }) => {
+const addUser = ({ email, password, firstName, verificationToken }) => {
   try {
     return User.create({
       email,
       password,
       firstName,
-      walletId,
+      verificationToken,
     });
   } catch (err) {
     return false;
@@ -32,7 +32,7 @@ const getUserById = ({ _id }) => {
   }
 };
 
-const updateUserToken = ({ _id, body }) => {
+const updateUser = ({ _id, body }) => {
   try {
     return User.findOneAndUpdate({ _id }, body, { new: true });
   } catch (err) {
@@ -56,6 +56,6 @@ module.exports = {
   addUser,
   getUserByEmail,
   getUserById,
-  updateUserToken,
+  updateUser,
   verifyToken,
 };

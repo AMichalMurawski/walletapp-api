@@ -16,13 +16,17 @@ const user = new Schema(
       type: String,
       required: [true, 'Password is required'],
     },
-    token: {
+    accessToken: {
+      type: String,
+      default: null,
+    },
+    refreshToken: {
       type: String,
       default: null,
     },
     walletId: {
       type: String,
-      required: [true, 'MachineId is required'],
+      required: [false, 'MachineId is required'],
     },
     verify: {
       type: Boolean,
@@ -30,7 +34,7 @@ const user = new Schema(
     },
     verificationToken: {
       type: String,
-      required: [true, 'Verify token is required'],
+      default: null,
     },
   },
   {

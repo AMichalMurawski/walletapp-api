@@ -13,6 +13,8 @@ router.get('/current', auth, userController.currentUser);
 
 router.get('/verify/:verificationToken', userController.verifyToken);
 
-router.post('verify', userController.repeatVerification);
+router.post('/verify', userController.sendVerification);
+
+router.post('/new-tokens', userController.newTokens);
 
 module.exports = router;
