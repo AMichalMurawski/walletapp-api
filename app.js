@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const walletRouter = require('./routes/api/wallet');
 const usersRouter = require('./routes/api/users');
+const authRouter = require('./routes/api/auth');
 const cookieParser = require('cookie-parser');
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser());
 require('./config/config-passport');
 app.use('/api/wallet', walletRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
 app.use(express.static('./public'));
 
 app.use((req, res) => {
