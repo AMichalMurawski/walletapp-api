@@ -1,3 +1,11 @@
+/**
+ * @swagger
+ * /auth/sign-up:
+ *   post:
+ *     summary: Create new user
+ *     description:
+ */
+
 const express = require('express');
 const router = express.Router();
 const authController = require('../../controller/authController');
