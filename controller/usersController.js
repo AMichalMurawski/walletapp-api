@@ -67,11 +67,11 @@ const sendVerification = async (req, res, next) => {
     const user = await userService.getUserByEmail({ email });
     if (!user) {
       return res.status(401).json({
-        message: 'Wrong email',
+        message: 'User with such email not existed',
       });
     }
     if (user.verify) {
-      return res.status(400).json({
+      return res.status(403).json({
         message: 'User already verified',
       });
     }
@@ -88,7 +88,7 @@ const sendVerification = async (req, res, next) => {
     await sgMail.send(msgMail);
 
     res.json({
-      message: 'Verification send',
+      message: 'Verification sent',
     });
   } catch (err) {
     console.error(err);

@@ -24,3 +24,20 @@ passport.use(
       .catch(err => done(err));
   })
 );
+
+/**
+ * @swagger
+ *  definitions:
+ *    authorization:
+ *      Auth:
+ *        - name: accessToken
+ *          in: header
+ *          description: Token assigned to header as bearer-token
+ *          required: true
+ *      Auth2:
+ *        - name: x-api-token
+ *          description: Token for authorization
+ *          in:  head
+ *          required: true
+ *          type: string
+ */

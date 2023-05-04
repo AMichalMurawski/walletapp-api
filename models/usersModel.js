@@ -50,3 +50,65 @@ const user = new Schema(
 const User = mongoose.model('user', user);
 
 module.exports = User;
+
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      Sign-up:
+ *        type: object
+ *        required:
+ *          - email
+ *          - password
+ *          - firstName
+ *        properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *            firstName:
+ *              type: string
+ *      Sign-in:
+ *        type: object
+ *        required:
+ *          - email
+ *          - password
+ *          - firstName
+ *        properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *            firstName:
+ *              type: string
+ *      SendVerify:
+ *        type: object
+ *        required:
+ *          - email
+ *        properties:
+ *            email:
+ *              type: string
+ */
+
+/**
+ * @swagger
+ *  definitions:
+ *      User:
+ *        type: object
+ *        example:
+ *          user:
+ *            id: objectId
+ *            email: string
+ *            firstName: string
+ *      UserLog:
+ *        allOf:
+ *          - $ref: '#/definitions/User'
+ *          - type: object
+ *            example:
+ *              accessToken: string
+ *      Auth:
+ *        - name: accessToken
+ *          in: header
+ *          description: Token assigned to header as bearer-token
+ *          required: true
+ */
