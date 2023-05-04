@@ -16,13 +16,17 @@ const user = new Schema(
       type: String,
       required: [true, 'Password is required'],
     },
-    token: {
+    accessToken: {
+      type: String,
+      default: null,
+    },
+    refreshToken: {
       type: String,
       default: null,
     },
     walletId: {
       type: String,
-      required: [true, 'MachineId is required'],
+      required: [false, 'MachineId is required'],
     },
     verify: {
       type: Boolean,
@@ -30,7 +34,7 @@ const user = new Schema(
     },
     verificationToken: {
       type: String,
-      required: [true, 'Verify token is required'],
+      default: null,
     },
   },
   {
@@ -46,3 +50,65 @@ const user = new Schema(
 const User = mongoose.model('user', user);
 
 module.exports = User;
+
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      Sign-up:
+ *        type: object
+ *        required:
+ *          - email
+ *          - password
+ *          - firstName
+ *        properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *            firstName:
+ *              type: string
+ *      Sign-in:
+ *        type: object
+ *        required:
+ *          - email
+ *          - password
+ *          - firstName
+ *        properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *            firstName:
+ *              type: string
+ *      SendVerify:
+ *        type: object
+ *        required:
+ *          - email
+ *        properties:
+ *            email:
+ *              type: string
+ */
+
+/**
+ * @swagger
+ *  definitions:
+ *      User:
+ *        type: object
+ *        example:
+ *          user:
+ *            id: objectId
+ *            email: string
+ *            firstName: string
+ *      UserLog:
+ *        allOf:
+ *          - $ref: '#/definitions/User'
+ *          - type: object
+ *            example:
+ *              accessToken: string
+ *      Auth:
+ *        - name: accessToken
+ *          in: header
+ *          description: Token assigned to header as bearer-token
+ *          required: true
+ */
