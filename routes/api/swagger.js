@@ -7,6 +7,6 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 router.use('/', swaggerUi.serve);
-router.get('/', swaggerUi.setup(swaggerSpec));
+router.get('/', swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 module.exports = router;

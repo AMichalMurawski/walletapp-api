@@ -33,24 +33,23 @@ const signup = async (req, res, next) => {
 
     const isExist = await userService.getUserByEmail({ email });
     if (isExist) {
-      return res.status(400).json({
-        message: 'Email already exist',
+      return res.status(409).json({
+        message: 'User with such email already exists',
       });
     }
 
     const hash = await bcrypt.hash(password, 15);
 
-    const verificationToken = await nanoid.nanoid();
+    // const verificationToken = await nanoid.nanoid();
 
     const user = await userService.addUser({
       email,
       password: hash,
       firstName,
-      verificationToken,
     });
     if (!user) {
       return res.status(409).json({
-        message: 'User not created',
+        message: 'User not created, try again',
       });
     }
 
@@ -69,7 +68,11 @@ const signup = async (req, res, next) => {
     // };
     // await sgMail.send(msgMail);
     res.cookie('refreshToken', refreshToken, cookieParams);
-    res.status(201).json({ user: { ...user._doc, accessToken } });
+    res.status(201).json({
+      user: { id: user._id, email: user.email, firstName: user.firstName },
+      accessToken,
+      message: 'New user registered',
+    });
   } catch (err) {
     console.error(err);
     next(err);
@@ -99,7 +102,7 @@ const signin = async (req, res, next) => {
       email,
     });
     if (!user) {
-      return res.status(401).json({
+      return res.status(404).json({
         message: 'Email or password is wrong',
       });
     }
@@ -112,7 +115,7 @@ const signin = async (req, res, next) => {
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).json({
+      return res.status(404).json({
         message: 'Email or password is wrong',
       });
     }
@@ -121,15 +124,16 @@ const signin = async (req, res, next) => {
       user,
     });
 
-    const { firstName } = user;
+    const { firstName, _id } = user;
 
     res.cookie('refreshToken', refreshToken, cookieParams);
     res.json({
-      accessToken,
       user: {
+        id: _id,
         email,
         firstName,
       },
+      accessToken,
     });
   } catch (err) {
     console.error(err);
