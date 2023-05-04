@@ -1,34 +1,33 @@
 const Joi = require('joi');
 
-const wallet = Joi.defaults(() =>
+const transactionSchema = Joi.object({
+  date: Joi.date(),
+  type: Joi.string().valid('income', 'expense'),
+  category: Joi.string().valid(
+    'main expenses',
+    'products',
+    'car',
+    'self care',
+    'child care',
+    'household products',
+    'education',
+    'leisure',
+    'other expenses'
+  ),
+  comment: Joi.string(),
+  sum: Joi.number().min(1),
+});
+
+const walletSchema = Joi.defaults(() =>
   Joi.object({
-    date: Joi.date().required(),
-    type: Joi.string().valid('income', 'expense').required(),
-    category: Joi.string()
-      .valid(
-        'main expenses',
-        'products',
-        'car',
-        'self care',
-        'child care',
-        'household products',
-        'education',
-        'leisure',
-        'other expenses'
-      )
-      .required(),
-    comment: Joi.string(),
-    sum: Joi.number().min(1).required(),
+    balance: Joi.number().min(0),
+    transactions: Joi.string(), // tu będzie array z transactionSchema
+    owner: Joi.string(),
   })
 );
 
-// walidacja dla dowolnego propsa (należy tutaj podać wszystkie)
-const atLeastOne = wallet
-  .object()
-  .or('date', 'type', 'category', 'comment', 'sum');
-
-// walidacja dla wymaganych wszystkich propsów
-const allRequired = wallet
+const atLeastOne = walletSchema.object().or('balance', 'transactions', 'owner');
+const allRequired = walletSchema
   .object()
   .options({ presence: 'required' })
   .required();

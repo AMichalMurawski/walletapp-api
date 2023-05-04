@@ -1,6 +1,11 @@
 const Wallet = require('../models/walletModel');
 
-const addTransaction = ({ date, type, category, comment, sum, owner }) =>
-  Wallet.create({ date, type, category, comment, sum, owner });
+const createWallet = ({ balance, transactions, owner }) => {
+  try {
+    return Wallet.create({ balance, transactions, owner });
+  } catch (err) {
+    return false;
+  }
+};
 
-module.exports = { addTransaction };
+module.exports = { createWallet };

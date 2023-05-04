@@ -5,6 +5,7 @@ const tokensUtils = require('../utils/tokensUtils');
 
 sgMail.setApiKey(process.env.SENDGRID_TOKEN);
 const sgFrom = process.env.SENDGRID_EMAIL;
+
 const cookieParams = {
   httpOnly: true,
   // secure: true,

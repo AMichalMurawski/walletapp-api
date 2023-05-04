@@ -1,33 +1,21 @@
+const mongoose = require('mongoose');
+
 const walletService = require('../services/walletService');
 const JoiSchema = require('../schemas/walletSchema');
 
-const create = async (req, res, next) => {
+require('dotenv').config();
+
+const createWallet = async (req, res, next) => {
   try {
-    const { _id } = await req.user;
-    let { date, type, category, comment, sum } = await req.body;
-
-    const isValid = JoiSchema.allRequired.validate({
-      date,
-      type,
-      category,
-      comment,
-      sum,
+    const { userId } = req.params;
+    const wallet = await walletService.createWallet({
+      balance: 0,
+      transactions: [],
+      owner: userId,
+      ...req.body,
     });
-    if (isValid.error) {
-      return res.status(400).json({
-        message: isValid.error.details[0].message,
-      });
-    }
 
-    const transaction = await walletService.addTransaction({
-      date,
-      type,
-      category,
-      comment,
-      sum,
-      owner: _id,
-    });
-    res.status(201).json({ transaction });
+    res.status(201).json({ wallet });
   } catch (err) {
     console.error(err);
     next(err);
@@ -71,4 +59,4 @@ const create = async (req, res, next) => {
 //       return;
 //     }
 
-module.exports = { create };
+module.exports = { createWallet };
