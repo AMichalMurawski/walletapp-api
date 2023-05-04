@@ -2,12 +2,17 @@ const userService = require('../services/userService');
 const JoiSchema = require('../schemas/usersSchema');
 const nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
+const tokensUtils = require('../utils/tokensUtils');
 
-const secret = process.env.SECRET;
 sgMail.setApiKey(process.env.SENDGRID_TOKEN);
 const sgFrom = process.env.SENDGRID_EMAIL;
+const cookieParams = {
+  httpOnly: true,
+  // secure: true,
+  sameSite: 'Strict',
+  maxAge: 604800000, // 7 days
+};
 
 require('dotenv').config();
 
@@ -35,13 +40,13 @@ const signup = async (req, res, next) => {
 
     const hash = await bcrypt.hash(password, 15);
 
-    const varificationToken = await nanoid.nanoid();
+    const verificationToken = await nanoid.nanoid();
 
     const user = await userService.addUser({
       email,
       password: hash,
       firstName,
-      varificationToken,
+      verificationToken,
     });
     if (!user) {
       return res.status(409).json({
@@ -49,19 +54,22 @@ const signup = async (req, res, next) => {
       });
     }
 
-    const verificationToken = nanoid.nanoid();
-    const verificationURL = `${req.protocol}://${req.get(
-      'host'
-    )}/api/users/verify/:${verificationToken}`;
-    const msgMail = {
-      to: email,
-      from: sgFrom,
-      subject: 'Please verify your email for walletapp',
-      text: `Hello ${firstName}. You registered an account on walletapp. Before you can access verify your email by clicking here: ${verificationURL}`,
-    };
-    await sgMail.send(msgMail);
+    const { accessToken, refreshToken } = await tokensUtils.generateTokens({
+      user,
+    });
 
-    res.status(201).json({ user });
+    // const verificationURL = `${req.protocol}://${req.get(
+    //   'host'
+    // )}/api/users/verify/:${verificationToken}`;
+    // const msgMail = {
+    //   to: email,
+    //   from: sgFrom,
+    //   subject: 'Please verify your email for walletapp',
+    //   text: `Hello ${firstName}. You registered an account on walletapp. Before you can access verify your email by clicking here: ${verificationURL}`,
+    // };
+    // await sgMail.send(msgMail);
+    res.cookie('refreshToken', refreshToken, cookieParams);
+    res.status(201).json({ user: { ...user._doc, accessToken } });
   } catch (err) {
     console.error(err);
     next(err);
@@ -96,11 +104,11 @@ const signin = async (req, res, next) => {
       });
     }
 
-    if (!user.verify) {
-      return req.status(403).json({
-        message: 'User not verified',
-      });
-    }
+    // if (!user.verify) {
+    //   return req.status(403).json({
+    //     message: 'User not verified',
+    //   });
+    // }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
@@ -109,17 +117,15 @@ const signin = async (req, res, next) => {
       });
     }
 
-    const payload = {
-      id: user._id,
-      username: user.email,
-    };
-    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
-    await userService.updateUserToken({ _id: user._id, body: { token } });
+    const { accessToken, refreshToken } = await tokensUtils.generateTokens({
+      user,
+    });
 
     const { firstName } = user;
 
+    res.cookie('refreshToken', refreshToken, cookieParams);
     res.json({
-      token,
+      accessToken,
       user: {
         email,
         firstName,
@@ -142,11 +148,11 @@ const signout = async (req, res, next) => {
       });
     }
 
-    await userService.updateUserToken({
+    await userService.updateUser({
       _id,
-      body: { token: null },
+      body: { accessToken: null, refreshToken: null },
     });
-
+    res.cookie('refreshToken', null);
     res.status(204).json();
   } catch (err) {
     console.error(err);
@@ -194,7 +200,7 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-const repeatVerification = async (req, res, next) => {
+const sendVerification = async (req, res, next) => {
   try {
     const { email } = req.body;
     const isValid = JoiSchema.atLeastOne.validate({ email });
@@ -236,11 +242,58 @@ const repeatVerification = async (req, res, next) => {
   }
 };
 
+const newTokens = async (req, res, next) => {
+  try {
+    let refreshToken = req.cookies.refreshToken;
+
+    const { tokenDetails } = await tokensUtils.verifyRefreshToken({
+      refreshToken,
+    });
+    console.log('tokenDetails:', { ...tokenDetails });
+    if (!tokenDetails) {
+      return res.status(401).json({
+        message: 'Not authorized',
+      });
+    }
+
+    const { _id } = tokenDetails;
+    const user = await userService.getUserById({
+      _id,
+    });
+    console.log('user:', user);
+    if (!user) {
+      return res.status(401).json({
+        message: 'Not authorized',
+      });
+    }
+
+    if (refreshToken !== user.refreshToken) {
+      return res.status(401).json({
+        message: 'Not authorized',
+      });
+    }
+
+    const tokens = await tokensUtils.generateTokens({
+      user,
+    });
+
+    refreshToken = tokens.refreshToken;
+    res.cookie('refreshToken', refreshToken, cookieParams);
+    res.status(201).json({
+      accessToken: tokens.accessToken,
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
 module.exports = {
   signup,
   signin,
   signout,
   currentUser,
   verifyToken,
-  repeatVerification,
+  sendVerification,
+  newTokens,
 };
