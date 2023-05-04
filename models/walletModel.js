@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const Schema = mongoose.Schema;
 
 const transactionSchema = new Schema({
   date: { type: Date, required: true },
@@ -9,12 +9,16 @@ const transactionSchema = new Schema({
   sum: { type: Number, required: true },
 });
 
-const walletSchema = new Schema({
-  walletId: { type: String, required: true },
-  balance: { type: Number },
-  transactions: [transactionSchema],
-  owners: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-});
+const walletSchema = new Schema(
+  {
+    balance: { type: Number },
+    transactions: [transactionSchema],
+    owner: { type: String },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const Wallet = mongoose.model('Wallet', walletSchema);
 

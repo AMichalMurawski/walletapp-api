@@ -1,33 +1,38 @@
 const Joi = require('joi');
 
 const transactionSchema = Joi.object({
-  date: Joi.date().required(),
-  type: Joi.string().valid('income', 'expense').required(),
-  category: Joi.string()
-    .valid(
-      'main expenses',
-      'products',
-      'car',
-      'self care',
-      'child care',
-      'household products',
-      'education',
-      'leisure',
-      'other expenses'
-    )
-    .required(),
+  date: Joi.date(),
+  type: Joi.string().valid('income', 'expense'),
+  category: Joi.string().valid(
+    'main expenses',
+    'products',
+    'car',
+    'self care',
+    'child care',
+    'household products',
+    'education',
+    'leisure',
+    'other expenses'
+  ),
   comment: Joi.string(),
-  sum: Joi.number().min(1).required(),
+  sum: Joi.number().min(1),
 });
 
-const walletSchema = Joi.object({
-  walletId: Joi.string().required(),
-  balance: Joi.number().min(0).required(),
-  transactions: Joi.array().items(transactionSchema),
-  owners: Joi.array().items(Joi.string()),
-});
+const walletSchema = Joi.defaults(() =>
+  Joi.object({
+    balance: Joi.number().min(0),
+    transactions: Joi.string(), // tu będzie array z transactionSchema
+    owner: Joi.string(),
+  })
+);
+
+const atLeastOne = walletSchema.object().or('balance', 'transactions', 'owner');
+const allRequired = walletSchema
+  .object()
+  .options({ presence: 'required' })
+  .required();
 
 module.exports = {
-  walletSchema,
-  transactionSchema,
+  atLeastOne,
+  allRequired,
 };

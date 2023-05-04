@@ -1,8 +1,8 @@
 const Wallet = require('../models/walletModel');
 
-const createWallet = ({ walletId, balance, transactions, owners }) => {
+const createWallet = ({ balance, transactions, owner }) => {
   try {
-    return Wallet.create({ walletId, balance, transactions, owners });
+    return Wallet.create({ balance, transactions, owner });
   } catch (err) {
     return false;
   }

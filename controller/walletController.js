@@ -1,33 +1,24 @@
-const nanoid = require('nanoid');
+const mongoose = require('mongoose');
+
 const walletService = require('../services/walletService');
-const { walletSchema } = require('../schemas/walletSchema');
+const JoiSchema = require('../schemas/walletSchema');
+
+require('dotenv').config();
 
 const createWallet = async (req, res, next) => {
   try {
-    const userId = req.user && req.user._id;
-    if (!userId) {
-      throw new Error('User not found');
-    }
-
-    const { error } = walletSchema.validate({ _id: userId });
-    if (error) {
-      throw new Error(error.details[0].message);
-    }
-
+    const { userId } = req.params;
     const wallet = await walletService.createWallet({
-      walletId: nanoid.nanoid(10),
       balance: 0,
       transactions: [],
-      owners: [userId],
+      owner: userId,
+      ...req.body,
     });
-    if (!wallet) {
-      throw new Error('Failed to create wallet');
-    }
 
-    res.status(201).json({ walletId: wallet.walletId });
-  } catch (error) {
-    console.error(error);
-    next(error);
+    res.status(201).json({ wallet });
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 };
 
