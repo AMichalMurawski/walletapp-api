@@ -1,11 +1,22 @@
 const Wallet = require('../models/walletModel');
 
-const createWallet = ({ balance, transactions, owner }) => {
+const createWallet = body => {
   try {
-    return Wallet.create({ balance, transactions, owner });
+    return Wallet.create(body);
   } catch (err) {
     return false;
   }
 };
 
-module.exports = { createWallet };
+const getWalletById = ({ _id }) => {
+  try {
+    return Wallet.findOne({ _id: _id });
+  } catch (err) {
+    return false;
+  }
+};
+
+module.exports = {
+  createWallet,
+  getWalletById,
+};

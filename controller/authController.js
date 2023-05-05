@@ -1,6 +1,6 @@
 const userService = require('../services/userService');
 const JoiSchema = require('../schemas/usersSchema');
-const nanoid = require('nanoid');
+// const nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
 // const sgMail = require('@sendgrid/mail');
 const tokensUtils = require('../utils/tokensUtils');
@@ -125,7 +125,7 @@ const signin = async (req, res, next) => {
     });
 
     const { firstName, _id } = user;
-
+    console.log('cookies', refreshToken);
     res.cookie('refreshToken', refreshToken, cookieParams);
     res.json({
       user: {
