@@ -3,7 +3,7 @@
 const walletService = require('../services/walletService');
 const userService = require('../services/userService');
 const walletUtils = require('../utils/walletUtils');
-const JoiSchema = require('../schemas/walletSchema');
+// const JoiSchema = require('../schemas/walletSchema');
 
 require('dotenv').config();
 

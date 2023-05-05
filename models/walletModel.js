@@ -9,12 +9,24 @@ const transactionSchema = new Schema({
   sum: { type: Number, required: true },
 });
 
+const categorySchema = new Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  type: [],
+});
+
+const ownerSchema = new Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  role: { type: String, required: true },
+});
+
 const walletSchema = new Schema(
   {
     balance: { type: Number, required: true },
     transactions: [transactionSchema],
-    categories: [],
-    owners: { type: String },
+    categories: [categorySchema],
+    owners: [ownerSchema],
   },
   {
     timestamps: true,
@@ -59,8 +71,9 @@ module.exports = Wallet;
  *      WalletUser:
  *        type: object
  *        example:
- *          userId: string
- *          userRole: string
+ *          id: string
+ *          name: string
+ *          role: string
  *
  *      Wallet:
  *        type: object
@@ -114,7 +127,9 @@ module.exports = Wallet;
  *          name:
  *            type: string
  *          type:
- *            type: string
+ *            type: array
+ *            items:
+ *              string:
  *
  *      Transaction:
  *        type: object
@@ -155,7 +170,9 @@ module.exports = Wallet;
  *          name:
  *            type: string
  *          type:
- *            type: string
+ *            type: array
+ *            items:
+ *              string:
  *
  *      WalletAPI:
  *        type: object
