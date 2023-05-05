@@ -4,16 +4,17 @@ const Schema = mongoose.Schema;
 const transactionSchema = new Schema({
   date: { type: Date, required: true },
   type: { type: String, required: true },
-  category: { type: String, required: true },
+  categoryId: { type: String, required: true },
   comment: { type: String },
   sum: { type: Number, required: true },
 });
 
 const walletSchema = new Schema(
   {
-    balance: { type: Number },
+    balance: { type: Number, required: true },
     transactions: [transactionSchema],
-    owner: { type: String },
+    categories: { type: array, required: true },
+    owners: { type: String },
   },
   {
     timestamps: true,
@@ -64,7 +65,7 @@ module.exports = Wallet;
  *      Wallet:
  *        type: object
  *        example:
- *          id: string
+ *          walletId: string
  *
  *      AddTransaction:
  *        type: object
@@ -139,9 +140,11 @@ module.exports = Wallet;
  *      WalletUserAPI:
  *        type: object
  *        properties:
- *          userId:
+ *          id:
  *            type: string
- *          userRole:
+ *          name:
+ *            type: string
+ *          role:
  *            type: string
  *
  *      CategoriesAPI:

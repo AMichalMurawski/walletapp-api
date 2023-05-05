@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const walletController = require('../../controller/walletController');
+const categoriesController = require('../../controller/categoriesController');
 // const auth = require('../../middlewares/userAuth');
 
 // router.get('/', auth, walletController.get); // przy pisaniu pomiń auth, wrzucimy go gdy przygotuję logowanie i rejestrację
-router.post('/:userId', walletController.createWallet);
+router.post('/', walletController.createWallet);
 
 /**
  *  @swagger
@@ -181,7 +182,10 @@ router.delete('/:walletId/transactions/:transactionId');
  *                  description: Transaction not found
  */
 
-router.get('/:walletId/transaction-categories');
+router.get(
+  '/:walletId/transaction-categories',
+  categoriesController.categoriesList
+);
 
 /**
  *  @swagger
@@ -196,7 +200,7 @@ router.get('/:walletId/transaction-categories');
  *                  required: true
  *          responses:
  *              200:
- *                  description: Transaction deleted
+ *                  description: Transactions categories returned
  *                  content:
  *                      application/json:
  *                          schema:
@@ -206,10 +210,16 @@ router.get('/:walletId/transaction-categories');
  *              403:
  *                  description: User does not owns wallet
  *              404:
- *                  description: Transaction not found
+ *                  description:
+ *                      Wallet not found
+ *                      OR
+ *                      Categories not found
  */
 
-router.get('/:walletId/transactions-summary');
+router.get(
+  '/:walletId/transactions-summary',
+  categoriesController.transactionsSummary
+);
 
 /**
  *  @swagger
@@ -243,6 +253,10 @@ router.get('/:walletId/transactions-summary');
  *                  description: Not authorized
  *              403:
  *                  description: User does not owns wallet
+ *              404:
+ *                  description: Wallet not found
+ *              409:
+ *                  description: Transactions summary not calculated
  */
 
 module.exports = router;
