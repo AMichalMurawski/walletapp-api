@@ -18,6 +18,7 @@ const generateTokens = async ({ user }) => {
     _id: user._id,
     body: { accessToken, refreshToken },
   });
+
   if (!addToken) {
     return false;
   }
@@ -26,27 +27,15 @@ const generateTokens = async ({ user }) => {
 };
 
 const verifyRefreshToken = async ({ refreshToken }) => {
-  return new Promise((resolve, reject) => {
-    const user = userService.getUserByRefreshToken({ refreshToken });
-    if (!user) {
-      return reject(
-        new Error({
-          error: true,
-          message: 'Invalid refresh token',
-        })
-      );
+  const user = await userService.getUserByRefreshToken({ refreshToken });
+  if (!user) {
+    return false;
+  }
+  return jwt.verify(refreshToken, secretRefresh, (err, tokenDetails) => {
+    if (err) {
+      return false;
     }
-    jwt.verify(refreshToken, secretRefresh, (err, tokenDetails) => {
-      if (err) {
-        return reject(
-          new Error({
-            error: true,
-            message: 'Invalid refresh token',
-          })
-        );
-      }
-      resolve({ tokenDetails, message: 'Valid refresh token' });
-    });
+    return { tokenDetails };
   });
 };
 

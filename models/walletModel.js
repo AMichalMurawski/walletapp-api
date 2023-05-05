@@ -13,7 +13,7 @@ const walletSchema = new Schema(
   {
     balance: { type: Number, required: true },
     transactions: [transactionSchema],
-    categories: { type: array, required: true },
+    categories: [],
     owners: { type: String },
   },
   {

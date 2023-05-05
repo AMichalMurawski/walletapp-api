@@ -16,12 +16,12 @@ const basicCategories = () => {
 const sumTransactions = (wallet, year, month) => {
   const { transactions, categories } = wallet;
 
-  let categorySummary = wallet.categories;
+  const categorySummary = categories;
   categorySummary.forEach(category => (category.total = 0));
   const summary = { income: 0, expense: 0 };
 
   const specificTransactions = transactions.filter(
-    trans => getYear(trans.Date) === year && getMonth(trans.Date) === month
+    trans => trans.Date.getYear() === year && trans.Date.getMonth() === month
   );
 
   specificTransactions.forEach(trans => {
@@ -29,7 +29,7 @@ const sumTransactions = (wallet, year, month) => {
       category => category.id === trans.categoryId
     );
     categorySummary[i].total += trans.sum;
-    summary[lowerCase(trans.type)] += trans.sum;
+    summary[trans.type.toLowerCase()] += trans.sum;
   });
 
   const periodTotal = summary.income - summary.expense;
@@ -43,14 +43,6 @@ const sumTransactions = (wallet, year, month) => {
     month,
   };
 };
-
-const transactionSchema = new Schema({
-  date: { type: Date, required: true },
-  type: { type: String, required: true },
-  categoryId: { type: String, required: true },
-  comment: { type: String },
-  sum: { type: Number, required: true },
-});
 
 module.exports = {
   basicCategories,

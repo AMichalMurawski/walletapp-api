@@ -104,18 +104,19 @@ const newTokens = async (req, res, next) => {
     const { tokenDetails } = await tokensUtils.verifyRefreshToken({
       refreshToken,
     });
-    console.log('tokenDetails:', { ...tokenDetails });
+    console.log(tokenDetails);
+
     if (!tokenDetails) {
       return res.status(401).json({
         message: 'Not authorized',
       });
     }
+    const { id } = tokenDetails;
 
-    const { _id } = tokenDetails;
     const user = await userService.getUserById({
-      _id,
+      _id: id,
     });
-    console.log('user:', user);
+
     if (!user) {
       return res.status(401).json({
         message: 'Not authorized',
@@ -125,6 +126,8 @@ const newTokens = async (req, res, next) => {
     if (refreshToken !== user.refreshToken) {
       return res.status(401).json({
         message: 'Not authorized',
+        refreshToken,
+        userToken: user.refreshToken,
       });
     }
 
