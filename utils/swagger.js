@@ -32,6 +32,15 @@ const swaggerDefinition = {
     {
       name: 'Wallet Controller',
     },
+    {
+      name: 'Transactions Controller',
+    },
+    {
+      name: 'Transactions Categories',
+    },
+    {
+      name: 'Transactions Summary',
+    },
   ],
   schemes: ['http'],
   consumes: ['application/json'],
