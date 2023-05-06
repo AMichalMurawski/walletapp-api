@@ -2,6 +2,13 @@ const walletService = require('../services/walletService');
 // const walletUtils = require('../utils/walletUtils');
 const JoiSchema = require('../schemas/transactionSchema');
 
+const calc = {
+  expense: -1,
+  income: 1,
+};
+
+// <===== TRANSACTION ADD =====>
+
 const addTransaction = async (req, res, next) => {
   const { walletId } = req.params;
   const { date, type, categoryId, comment, sum } = req.body;
@@ -14,7 +21,7 @@ const addTransaction = async (req, res, next) => {
     });
   }
 
-  const { owners, categories, balance } = wallet;
+  const { owners, categories } = wallet;
   const isOwner = owners.find(e => e.id === userId.toString());
   if (!isOwner) {
     return res.status(403).json({
@@ -49,17 +56,17 @@ const addTransaction = async (req, res, next) => {
     });
   }
 
-  let newBalance;
-  if (type === 'expense') {
-    newBalance = balance - sum;
-  } else {
-    newBalance = balance + sum;
-  }
-
   await walletService.createWalletTransaction({
     _id: walletId,
     transaction: req.body,
   });
+
+  const newWallet = await walletService.getWalletById({ _id: walletId });
+  const newBalance = newWallet.transactions.reduce((balance, transaction) => {
+    const total = balance + calc[transaction.type] * transaction.sum;
+    console.log(balance, transaction.sum, total);
+    return total;
+  }, 0);
 
   await walletService.updateWalletBalance({
     _id: walletId,
@@ -72,6 +79,8 @@ const addTransaction = async (req, res, next) => {
   });
 };
 
+// <===== TRANSACTIONS LIST =====>
+
 const listTransactions = async (req, res, next) => {
   const { walletId } = req.params;
   const { _id: userId } = req.user;
@@ -83,7 +92,8 @@ const listTransactions = async (req, res, next) => {
     });
   }
 
-  const { owners } = wallet;
+  const { owners, transactions } = wallet;
+
   const isOwner = owners.find(e => e.id === userId.toString());
   if (!isOwner) {
     return res.status(403).json({
@@ -91,12 +101,15 @@ const listTransactions = async (req, res, next) => {
     });
   }
 
-  res.status(201).json({ wallet });
+  res.status(201).json({ transactions });
 };
+
+// <===== TRANSACTION UPDATE =====>
 
 const updateTransaction = async (req, res, next) => {
   const { walletId, transactionId } = req.params;
   const { _id: userId } = req.user;
+  const { date, type, categoryId, comment, sum } = req.body;
 
   const wallet = await walletService.getWalletById({ _id: walletId });
   if (!wallet) {
@@ -105,7 +118,7 @@ const updateTransaction = async (req, res, next) => {
     });
   }
 
-  const { owners } = wallet;
+  const { owners, transactions, categories } = wallet;
   const isOwner = owners.find(e => e.id === userId.toString());
   if (!isOwner) {
     return res.status(403).json({
@@ -113,20 +126,66 @@ const updateTransaction = async (req, res, next) => {
     });
   }
 
-  const transaction = await walletService.getTransactionById(transactionId);
-  if (!transaction) {
-    return res.status(404).json({
-      message: 'Transaction with such id does not exist',
+  const isValid = JoiSchema.allRequired.validate({
+    date,
+    type,
+    categoryId,
+    comment,
+    sum,
+  });
+  if (isValid.error) {
+    return res.status(400).json({
+      message: isValid.error.details[0].message,
     });
   }
 
+  const isContain = categories.find(e => e.id === categoryId);
+  if (!isContain) {
+    return res.status(404).json({
+      message: 'Transaction category not found',
+    });
+  }
+
+  const isMatch = isContain.type.includes(type);
+  if (!isMatch) {
+    return res.status(409).json({
+      message: 'Transaction category type does not match transaction type',
+    });
+  }
+
+  const isTransaction = transactions.find(
+    e => e._id.toString() === transactionId
+  );
+  if (!isTransaction) {
+    return res.status(409).json({
+      message: 'Transaction with such id not exist in user wallet',
+    });
+  }
+
+  const transaction = { date, type, categoryId, comment, sum };
+
   await walletService.updateTransaction({
     _id: walletId,
-    transaction: req.body,
+    transaction,
+    transactionId,
   });
 
-  res.status(201).json({ transaction: req.body });
+  const newWallet = await walletService.getWalletById({ _id: walletId });
+  const newBalance = newWallet.transactions.reduce(
+    (balance, transaction) =>
+      balance + calc[transaction.type] * transaction.sum,
+    0
+  );
+
+  await walletService.updateWalletBalance({
+    _id: walletId,
+    balance: newBalance,
+  });
+
+  res.status(201).json({ transaction, balance: newBalance });
 };
+
+// <===== TRANSACTION DELETE =====>
 
 const deleteTransaction = async (req, res, next) => {
   const { walletId, transactionId } = req.params;
@@ -139,7 +198,7 @@ const deleteTransaction = async (req, res, next) => {
     });
   }
 
-  const { owners } = wallet;
+  const { owners, transactions } = wallet;
   const isOwner = owners.find(e => e.id === userId.toString());
   if (!isOwner) {
     return res.status(403).json({
@@ -147,18 +206,33 @@ const deleteTransaction = async (req, res, next) => {
     });
   }
 
-  const transaction = await walletService.getTransactionById(transactionId);
+  const transaction = transactions.find(
+    e => e._id.toString() === transactionId
+  );
   if (!transaction) {
-    return res.status(404).json({
-      message: 'Transaction with such id does not exist',
+    return res.status(409).json({
+      message: 'Transaction with such id not exist in user wallet',
     });
   }
 
-  await walletService.deleteTransaction({ _id: walletId });
+  const newWallet = await walletService.getWalletById({ _id: walletId });
+  const newBalance = newWallet.transactions.reduce(
+    (balance, transaction) =>
+      balance + calc[transaction.type] * transaction.sum,
+    0
+  );
 
-  res
-    .status(201)
-    .json({ message: 'Transaction deleted', transactionId: transactionId });
+  await walletService.deleteTransaction({
+    _id: walletId,
+    transactionId,
+  });
+
+  await walletService.updateWalletBalance({
+    _id: walletId,
+    balance: newBalance,
+  });
+
+  res.status(201).json({ message: 'Transaction deleted', balance: newBalance });
 };
 
 module.exports = {

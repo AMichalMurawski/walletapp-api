@@ -50,30 +50,37 @@ const updateWalletBalance = ({ _id, balance }) => {
   }
 };
 
-const getTransactionById = async ({ walletId, transactionId }) => {
-  try {
-    const wallet = await Wallet.findById(walletId);
-    const transaction = await Wallet.find({ transactions: { transactionId } });
-    return transaction ? transaction : false;
-  } catch (err) {
-    return false;
-  }
-};
-
-const updateTransaction = async ({ transactionId, transaction }) => {
+const updateTransaction = async ({ _id, transaction, transactionId }) => {
   try {
     return Wallet.updateOne(
-      { transactionId },
-      { $set: { transactions: [transaction] } }
+      {
+        _id,
+        'transactions._id': transactionId,
+      },
+      {
+        $set: {
+          'transactions.$.date': transaction.date,
+          'transactions.$.type': transaction.type,
+          'transactions.$.categoryId': transaction.categoryId,
+          'transactions.$.comment': transaction.comment,
+          'transactions.$.sum': transaction.sum,
+        },
+      },
+      {
+        new: true,
+      }
     );
   } catch (err) {
     return false;
   }
 };
 
-const deleteTransaction = async ({ transactionId }) => {
+const deleteTransaction = async ({ _id, transactionId }) => {
   try {
-    return Wallet.updateOne({ $pull: { transactions: { transactionId } } });
+    return Wallet.updateOne(
+      { _id },
+      { $pull: { transactions: { _id: transactionId } } }
+    );
   } catch (err) {
     return false;
   }
@@ -86,7 +93,6 @@ module.exports = {
   getWalletOwners,
   getWalletCategories,
   updateWalletBalance,
-  getTransactionById,
   updateTransaction,
   deleteTransaction,
 };
