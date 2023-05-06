@@ -94,7 +94,42 @@ const listTransactions = async (req, res, next) => {
   res.status(201).json({ wallet });
 };
 
+const updateTransaction = async (req, res, next) => {
+  const { walletId, transactionId } = req.params;
+  const { _id: userId } = req.user;
+
+  const wallet = await walletService.getWalletById({ _id: walletId });
+  if (!wallet) {
+    return res.status(404).json({
+      message: 'Wallet with such id not exist',
+    });
+  }
+
+  const { owners } = wallet;
+  const isOwner = owners.find(e => e.id === userId.toString());
+  if (!isOwner) {
+    return res.status(403).json({
+      message: 'User does not owns wallet',
+    });
+  }
+
+  const transaction = await walletService.getTransactionById(transactionId);
+  if (!transaction) {
+    return res.status(404).json({
+      message: 'Transaction with such id does not exist',
+    });
+  }
+
+  await walletService.updateTransaction({
+    _id: transactionId,
+    transaction: req.body,
+  });
+
+  res.status(201).json({ transaction: req.body });
+};
+
 module.exports = {
   addTransaction,
   listTransactions,
+  updateTransaction,
 };

@@ -83,7 +83,11 @@ router.get(
  *                  description: User does not owns wallet
  */
 
-router.patch('/:walletId/transactions/:transactionId');
+router.patch(
+  '/:walletId/transactions/:transactionId',
+  auth,
+  transactionsController.updateTransaction
+);
 
 /**
  *  @swagger

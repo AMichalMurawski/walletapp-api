@@ -50,6 +50,27 @@ const updateWalletBalance = ({ _id, balance }) => {
   }
 };
 
+const getTransactionById = async ({ walletId, transactionId }) => {
+  try {
+    const wallet = await Wallet.findById(walletId);
+    const transaction = await Wallet.find({ transactions: { transactionId } });
+    return transaction ? transaction : false;
+  } catch (err) {
+    return false;
+  }
+};
+
+const updateTransaction = async ({ transactionId, transaction }) => {
+  try {
+    return Wallet.updateOne(
+      { transactionId },
+      { $set: { transactions: [transaction] } }
+    );
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   createWallet,
   createWalletTransaction,
@@ -57,4 +78,6 @@ module.exports = {
   getWalletOwners,
   getWalletCategories,
   updateWalletBalance,
+  getTransactionById,
+  updateTransaction,
 };
