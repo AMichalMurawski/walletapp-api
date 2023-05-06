@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const createWallet = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const { _id: userId } = req.user;
 
     const user = await userService.getUserById({ _id: userId });
     if (!user) {
@@ -21,7 +21,7 @@ const createWallet = async (req, res, next) => {
     const wallet = await walletService.createWallet({
       balance: 0,
       transactions: [],
-      categories: walletUtils.basicCategories,
+      categories: walletUtils.basicCategories(),
       owners: [{ id: user._id, name: user.firstName, role: 'main' }],
     });
     if (!wallet) {

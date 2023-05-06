@@ -3,9 +3,11 @@ const logger = require('morgan');
 const cors = require('cors');
 require('dotenv').config();
 
-const walletRouter = require('./routes/api/wallet');
 const usersRouter = require('./routes/api/users');
 const authRouter = require('./routes/api/auth');
+const walletRouter = require('./routes/api/wallet');
+const categoriesRouter = require('./routes/api/categories');
+const transactionsRouter = require('./routes/api/transactions');
 const swaggerRouter = require('./routes/api/swagger');
 const cookieParser = require('cookie-parser');
 
@@ -20,6 +22,8 @@ app.use(cookieParser());
 
 require('./config/config-passport');
 app.use('/api/wallet', walletRouter);
+app.use('/api/wallet', categoriesRouter);
+app.use('/api/wallet', transactionsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/docs', swaggerRouter);

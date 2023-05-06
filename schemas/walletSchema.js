@@ -3,7 +3,7 @@ const Joi = require('joi');
 const walletSchema = Joi.defaults(() =>
   Joi.object({
     balance: Joi.number().min(0),
-    transactions: Joi.array(), // tu będzie array z transactionSchema
+    transactions: Joi.array(),
     categories: Joi.array(),
     owners: Joi.array(),
   })

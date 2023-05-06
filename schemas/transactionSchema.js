@@ -1,12 +1,14 @@
 const Joi = require('joi');
 
-const transactionSchema = Joi.object({
-  date: Joi.date(),
-  type: Joi.string().valid('income', 'expense'),
-  categoryId: Joi.string(),
-  comment: Joi.string(),
-  sum: Joi.number().min(1),
-});
+const transactionSchema = Joi.defaults(() =>
+  Joi.object({
+    date: Joi.date(),
+    type: Joi.string().valid('income', 'expense'),
+    categoryId: Joi.string(),
+    comment: Joi.string(),
+    sum: Joi.number().min(1),
+  })
+);
 
 const atLeastOne = transactionSchema
   .object()
