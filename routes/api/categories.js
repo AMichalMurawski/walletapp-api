@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const categoriesController = require('../../controller/categoriesController');
+const auth = require('../../middlewares/userAuth');
 
 router.get(
   '/:walletId/transaction-categories',
+  auth,
   categoriesController.categoriesList
 );
 
@@ -38,6 +40,7 @@ router.get(
 
 router.get(
   '/:walletId/transactions-summary',
+  auth,
   categoriesController.transactionsSummary
 );
 

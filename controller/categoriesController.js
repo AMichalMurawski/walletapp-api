@@ -33,7 +33,7 @@ const categoriesList = async (req, res, next) => {
 const transactionsSummary = async (req, res, next) => {
   const { walletId } = req.params;
   const { year, month } = req.query;
-  const { _id } = req.user;
+  const { _id: userId } = req.user;
 
   const wallet = await walletService.getWalletById({ _id: walletId });
   if (!wallet) {
@@ -42,15 +42,20 @@ const transactionsSummary = async (req, res, next) => {
     });
   }
 
-  const owners = wallet.owners;
-  const isOwner = owners.findIndex(i => i.id === _id);
+  const { owners, transactions, categories } = wallet;
+  const isOwner = owners.find(e => e.id === userId.toString());
   if (!isOwner) {
     return res.status(403).json({
       message: 'User does not owns wallet',
     });
   }
 
-  const summary = walletUtils.sumTransactions(wallet, year, month);
+  const summary = walletUtils.sumTransactions({
+    transactions: [...transactions],
+    categories: [...categories],
+    year,
+    month,
+  });
   if (!summary) {
     return res.status(409).json({
       message: 'Transactions summary not calculated',
