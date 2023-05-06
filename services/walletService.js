@@ -71,6 +71,14 @@ const updateTransaction = async ({ transactionId, transaction }) => {
   }
 };
 
+const deleteTransaction = async ({ transactionId }) => {
+  try {
+    return Wallet.updateOne({ $pull: { transactions: { transactionId } } });
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   createWallet,
   createWalletTransaction,
@@ -80,4 +88,5 @@ module.exports = {
   updateWalletBalance,
   getTransactionById,
   updateTransaction,
+  deleteTransaction,
 };

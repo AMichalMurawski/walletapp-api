@@ -127,7 +127,11 @@ router.patch(
  *                  description: Transaction or transaction category not found
  */
 
-router.delete('/:walletId/transactions/:transactionId');
+router.delete(
+  '/:walletId/transactions/:transactionId',
+  auth,
+  transactionsController.deleteTransaction
+);
 
 /**
  *  @swagger
