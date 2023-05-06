@@ -51,7 +51,11 @@ router.post(
  *                              $ref: '#/definitions/AddTransactionAPI'
  */
 
-router.get('/:walletId/transactions');
+router.get(
+  '/:walletId/transactions',
+  auth,
+  transactionsController.listTransactions
+);
 
 /**
  *  @swagger
@@ -66,7 +70,7 @@ router.get('/:walletId/transactions');
  *                  required: true
  *          responses:
  *              201:
- *                  description: Transaction created
+ *                  description: Transaction details
  *                  content:
  *                      application/json:
  *                          schema:
