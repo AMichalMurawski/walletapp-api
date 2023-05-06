@@ -51,8 +51,8 @@ const swaggerDefinition = {
       description: 'Development server',
     },
     {
-      url: '',
-      description: 'Web server - in progress on Heroku',
+      url: 'https://wallet-api.herokuapp.com/api',
+      description: 'Web server - in progress',
     },
   ],
 };
