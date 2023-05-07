@@ -65,7 +65,7 @@ router.get(
  *                  required: true
  *          responses:
  *              200:
- *                  description: Transaction deleted
+ *                  description: Transactions sumnmary returned
  *                  content:
  *                      application/json:
  *                          schema:
