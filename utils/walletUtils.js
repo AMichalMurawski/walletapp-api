@@ -10,7 +10,7 @@ const basicCategories = () => {
     { id: 7, name: 'leisure', type: ['expense'] },
     { id: 8, name: 'paycheck', type: ['income'] },
     { id: 98, name: 'other expenses', type: ['expense'] },
-    { id: 99, name: 'other incomse', type: ['expense'] },
+    { id: 99, name: 'other incomes', type: ['income'] },
   ];
 };
 

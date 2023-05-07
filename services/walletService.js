@@ -36,11 +36,7 @@ const getWalletCategories = async ({ _id }) => {
 
 const createTransaction = ({ _id, transaction }) => {
   try {
-    return Wallet.updateOne(
-      { _id },
-      { $push: { transactions: transaction } },
-      { new: true }
-    );
+    return Wallet.updateOne({ _id }, { $push: { transactions: transaction } });
   } catch (err) {
     return false;
   }
