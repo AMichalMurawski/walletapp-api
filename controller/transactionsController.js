@@ -42,6 +42,7 @@ const addTransaction = async (req, res, next) => {
     });
   }
 
+  console.log('categories:', categories);
   const isContain = categories.find(e => e.id === categoryId);
   if (!isContain) {
     return res.status(404).json({
@@ -49,6 +50,8 @@ const addTransaction = async (req, res, next) => {
     });
   }
 
+  console.log('isContain:', isContain);
+  console.log('type:', type);
   const isMatch = isContain.type.includes(type);
   if (!isMatch) {
     return res.status(409).json({
@@ -56,7 +59,7 @@ const addTransaction = async (req, res, next) => {
     });
   }
 
-  await walletService.createWalletTransaction({
+  const transaction = await walletService.createTransaction({
     _id: walletId,
     transaction: req.body,
   });
@@ -75,7 +78,7 @@ const addTransaction = async (req, res, next) => {
 
   res.status(201).json({
     balance: newBalance,
-    transaction: req.body,
+    transaction,
   });
 };
 

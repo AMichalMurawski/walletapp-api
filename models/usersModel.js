@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const walletSchema = new Schema({
+  _id: false,
+  id: { type: String, required: true },
+  role: { type: String, required: true },
+});
+
 const user = new Schema(
   {
     firstName: {
@@ -24,10 +30,7 @@ const user = new Schema(
       type: String,
       default: null,
     },
-    walletId: {
-      type: String,
-      required: [false, 'MachineId is required'],
-    },
+    wallets: [walletSchema.obj],
     verify: {
       type: Boolean,
       default: false,

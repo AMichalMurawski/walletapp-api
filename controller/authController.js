@@ -4,6 +4,8 @@ const JoiSchema = require('../schemas/usersSchema');
 const bcrypt = require('bcrypt');
 // const sgMail = require('@sendgrid/mail');
 const tokensUtils = require('../utils/tokensUtils');
+const walletUtils = require('../utils/walletUtils');
+const walletService = require('../services/walletService');
 
 // sgMail.setApiKey(process.env.SENDGRID_TOKEN);
 // const sgFrom = process.env.SENDGRID_EMAIL;
@@ -53,6 +55,21 @@ const signup = async (req, res, next) => {
       });
     }
 
+    console.log('before wallet');
+    const wallet = await walletService.createWallet({
+      balance: 0,
+      transactions: [],
+      categories: walletUtils.basicCategories(),
+      owners: [{ id: user._id, name: user.firstName, role: 'main' }],
+    });
+
+    console.log('after wallet');
+    await userService.updateUserWallets({
+      _id: user._id,
+      wallet: { id: wallet._id, role: 'main' },
+    });
+    console.log('after user');
+
     const { accessToken, refreshToken } = await tokensUtils.generateTokens({
       user,
     });
@@ -69,7 +86,12 @@ const signup = async (req, res, next) => {
     // await sgMail.send(msgMail);
     res.cookie('refreshToken', refreshToken, cookieParams);
     res.status(201).json({
-      user: { id: user._id, email: user.email, firstName: user.firstName },
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        wallets: [{ id: wallet._id, role: 'main' }],
+      },
       accessToken,
       message: 'New user registered',
     });
@@ -132,6 +154,7 @@ const signin = async (req, res, next) => {
         id: _id,
         email,
         firstName,
+        wallets: user.wallets,
       },
       accessToken,
     });
