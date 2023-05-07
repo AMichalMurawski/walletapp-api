@@ -56,15 +56,23 @@ const addTransaction = async (req, res, next) => {
     });
   }
 
-  await walletService.createWalletTransaction({
+  await walletService.createTransaction({
     _id: walletId,
     transaction: req.body,
   });
 
   const newWallet = await walletService.getWalletById({ _id: walletId });
+
+  const transactions = wallet.transactions.flatMap(e => e._id.toString());
+  console.log(transactions);
+  const newTransactions = newWallet.transactions.flatMap(e => e._id.toString());
+  console.log(newTransactions);
+  const transactionId = newTransactions.filter(
+    e => transactions.includes(e) === false
+  );
+
   const newBalance = newWallet.transactions.reduce((balance, transaction) => {
     const total = balance + calc[transaction.type] * transaction.sum;
-    console.log(balance, transaction.sum, total);
     return total;
   }, 0);
 
@@ -73,9 +81,11 @@ const addTransaction = async (req, res, next) => {
     balance: newBalance,
   });
 
+  const transaction = { date, type, categoryId, comment, sum };
+
   res.status(201).json({
     balance: newBalance,
-    transaction: req.body,
+    transaction: { ...transaction, id: transactionId[0] },
   });
 };
 
@@ -182,7 +192,10 @@ const updateTransaction = async (req, res, next) => {
     balance: newBalance,
   });
 
-  res.status(201).json({ transaction, balance: newBalance });
+  res.status(201).json({
+    transaction: { ...transaction, id: transactionId },
+    balance: newBalance,
+  });
 };
 
 // <===== TRANSACTION DELETE =====>
@@ -232,7 +245,11 @@ const deleteTransaction = async (req, res, next) => {
     balance: newBalance,
   });
 
-  res.status(201).json({ message: 'Transaction deleted', balance: newBalance });
+  res.status(201).json({
+    message: 'Transaction deleted',
+    id: transactionId,
+    balance: newBalance,
+  });
 };
 
 module.exports = {

@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const walletSchema = new Schema({
+  _id: false,
+  id: { type: String, required: true },
+  role: { type: String, required: true },
+});
+
 const user = new Schema(
   {
     firstName: {
@@ -24,10 +30,7 @@ const user = new Schema(
       type: String,
       default: null,
     },
-    walletId: {
-      type: String,
-      required: [false, 'MachineId is required'],
-    },
+    wallets: [walletSchema.obj],
     verify: {
       type: Boolean,
       default: false,
@@ -95,17 +98,42 @@ module.exports = User;
  *  definitions:
  *      User:
  *        type: object
- *        example:
+ *        properties:
  *          user:
- *            id: objectId
- *            email: string
- *            firstName: string
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: objectId
+ *            email:
+ *              type: string
+ *            firstName:
+ *              type: string
+ *            wallets:
+ *              type: array
+ *
  *      UserLog:
- *        allOf:
- *          - $ref: '#/definitions/User'
- *          - type: object
- *            example:
- *              accessToken: string
+ *        type: object
+ *        properties:
+ *          user:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: objectId
+ *              email:
+ *                type: string
+ *              firstName:
+ *                type: string
+ *              wallet:
+ *                type: array
+ *                items:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: string
+ *                    role:
+ *                      type: string
+ *          accessToken:
+ *            type: string
  *      Auth:
  *        - name: accessToken
  *          in: header

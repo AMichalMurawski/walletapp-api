@@ -48,6 +48,14 @@ const updateUser = ({ _id, body }) => {
   }
 };
 
+const updateUserWallets = ({ _id, wallet }) => {
+  try {
+    return User.updateOne({ _id }, { $push: { wallets: wallet } });
+  } catch (err) {
+    return false;
+  }
+};
+
 const verifyToken = ({ verificationToken }) => {
   try {
     return User.findOneAndUpdate(
@@ -66,5 +74,6 @@ module.exports = {
   getUserById,
   getUserByRefreshToken,
   updateUser,
+  updateUserWallets,
   verifyToken,
 };
