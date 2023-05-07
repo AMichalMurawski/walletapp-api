@@ -26,10 +26,11 @@ const currentUser = async (req, res, next) => {
       });
     }
 
-    const { email, firstName } = user;
+    const { email, firstName, wallets } = user;
     res.status(201).json({
       email,
       firstName,
+      wallets,
     });
   } catch (err) {
     console.error(err);

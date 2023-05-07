@@ -34,7 +34,7 @@ const getWalletCategories = async ({ _id }) => {
   }
 };
 
-const createWalletTransaction = ({ _id, transaction }) => {
+const createTransaction = ({ _id, transaction }) => {
   try {
     return Wallet.updateOne({ _id }, { $push: { transactions: transaction } });
   } catch (err) {
@@ -88,7 +88,7 @@ const deleteTransaction = async ({ _id, transactionId }) => {
 
 module.exports = {
   createWallet,
-  createWalletTransaction,
+  createTransaction,
   getWalletById,
   getWalletOwners,
   getWalletCategories,
