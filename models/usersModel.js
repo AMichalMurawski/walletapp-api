@@ -98,17 +98,42 @@ module.exports = User;
  *  definitions:
  *      User:
  *        type: object
- *        example:
+ *        properties:
  *          user:
- *            id: objectId
- *            email: string
- *            firstName: string
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: objectId
+ *            email:
+ *              type: string
+ *            firstName:
+ *              type: string
+ *            wallets:
+ *              type: array
+ *
  *      UserLog:
- *        allOf:
- *          - $ref: '#/definitions/User'
- *          - type: object
- *            example:
- *              accessToken: string
+ *        type: object
+ *        properties:
+ *          user:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: objectId
+ *              email:
+ *                type: string
+ *              firstName:
+ *                type: string
+ *              wallet:
+ *                type: array
+ *                items:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: string
+ *                    role:
+ *                      type: string
+ *          accessToken:
+ *            type: string
  *      Auth:
  *        - name: accessToken
  *          in: header
