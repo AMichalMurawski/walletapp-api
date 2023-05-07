@@ -2,19 +2,34 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const transactionSchema = new Schema({
+  id: { type: String, required: true },
   date: { type: Date, required: true },
   type: { type: String, required: true },
   categoryId: { type: String, required: true },
-  comment: { type: String },
+  comment: { type: String, required: true },
   sum: { type: Number, required: true },
+});
+
+const categorySchema = new Schema({
+  _id: false,
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  type: { type: Array, required: true },
+});
+
+const ownerSchema = new Schema({
+  _id: false,
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  role: { type: String, required: true },
 });
 
 const walletSchema = new Schema(
   {
     balance: { type: Number, required: true },
-    transactions: [transactionSchema],
-    categories: [],
-    owners: { type: String },
+    transactions: [transactionSchema.obj],
+    categories: [categorySchema.obj],
+    owners: [ownerSchema.obj],
   },
   {
     timestamps: true,
@@ -59,8 +74,9 @@ module.exports = Wallet;
  *      WalletUser:
  *        type: object
  *        example:
- *          userId: string
- *          userRole: string
+ *          id: string
+ *          name: string
+ *          role: string
  *
  *      Wallet:
  *        type: object
@@ -114,13 +130,13 @@ module.exports = Wallet;
  *          name:
  *            type: string
  *          type:
- *            type: string
+ *            type: array
+ *            items:
+ *              string:
  *
  *      Transaction:
  *        type: object
  *        properties:
- *          id:
- *            type: string
  *          date:
  *            type: string
  *          type:
@@ -155,7 +171,25 @@ module.exports = Wallet;
  *          name:
  *            type: string
  *          type:
+ *            type: array
+ *            items:
+ *              string:
+ *
+ *      TransactionAPI:
+ *        type: object
+ *        properties:
+ *          id:
  *            type: string
+ *          date:
+ *            type: string
+ *          type:
+ *            type: string
+ *          categoryId:
+ *            type: string
+ *          comment:
+ *            type: string
+ *          sum:
+ *            type: number
  *
  *      WalletAPI:
  *        type: object
@@ -185,5 +219,5 @@ module.exports = Wallet;
  *          transactions:
  *            type: array
  *            items:
- *              $ref: '#/definitions/Transaction'
+ *              $ref: '#/definitions/TransactionAPI'
  */
