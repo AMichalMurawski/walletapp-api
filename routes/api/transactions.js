@@ -14,7 +14,7 @@ router.post(
  *  /api/wallet/{walletId}/transactions:
  *      post:
  *          tags: [Transactions Controller]
- *          summary: Create new transaction for logged in user in specified wallet
+ *          summary: Create new transaction (for logged in user in specified wallet)
  *          parameters:
  *              -   name: accessToken
  *                  in: header
@@ -66,7 +66,7 @@ router.get(
  *  /api/wallet/{walletId}/transactions:
  *      get:
  *          tags: [Transactions Controller]
- *          summary: Get all transactions for logged in user in specified wallet
+ *          summary: Get all transactions (for logged in user in specified wallet)
  *          parameters:
  *              -   name: accessToken
  *                  in: header
@@ -102,7 +102,7 @@ router.patch(
  *  /api/wallet/{walletId}/transactions/{transactionId}:
  *      patch:
  *          tags: [Transactions Controller]
- *          summary: Update transaction
+ *          summary: Update transaction (for logged in user in specified wallet)
  *          parameters:
  *              -   name: accessToken
  *                  in: header
@@ -150,7 +150,7 @@ router.delete(
  *  /api/wallet/{walletId}/transactions/{transactionId}:
  *      delete:
  *          tags: [Transactions Controller]
- *          summary: Delete transaction
+ *          summary: Delete transaction (for logged in user in specified wallet)
  *          parameters:
  *              -   name: accessToken
  *                  in: header

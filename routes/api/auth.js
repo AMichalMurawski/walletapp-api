@@ -160,7 +160,7 @@ router.post('/refresh-tokens', authController.refreshTokens);
  *  /auth/refresh-tokens:
  *      post:
  *          tags: [Auth Controller]
- *          summary: Send new verification email
+ *          summary: Send new tokens
  *          parameters:
  *              -   in: cookies
  *                  name: refreshToken

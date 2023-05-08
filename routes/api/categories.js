@@ -14,7 +14,7 @@ router.get(
  *  /api/wallet/{walletId}/transaction-categories:
  *      get:
  *          tags: [Transactions Categories]
- *          summary: Get transaction categories
+ *          summary: Get transaction categories (for logged in user in specified wallet)
  *          parameters:
  *              -   name: accessToken
  *                  in: header
@@ -53,7 +53,7 @@ router.get(
  *  /api/wallet/{walletId}/transactions-summary:
  *      get:
  *          tags: [Transactions Summary]
- *          summary: Get transactions summary for period
+ *          summary: Get transactions summary for period (for logged in user in specified wallet)
  *          parameters:
  *              -   name: accessToken
  *                  in: header
