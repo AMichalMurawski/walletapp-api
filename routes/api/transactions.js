@@ -14,8 +14,12 @@ router.post(
  *  /api/wallet/{walletId}/transactions:
  *      post:
  *          tags: [Transactions Controller]
- *          summary: Create new transaction for logged in user in specified wallet
+ *          summary: Create new transaction (for logged in user in specified wallet)
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -62,8 +66,12 @@ router.get(
  *  /api/wallet/{walletId}/transactions:
  *      get:
  *          tags: [Transactions Controller]
- *          summary: Get all transactions for logged in user in specified wallet
+ *          summary: Get all transactions (for logged in user in specified wallet)
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -94,8 +102,12 @@ router.patch(
  *  /api/wallet/{walletId}/transactions/{transactionId}:
  *      patch:
  *          tags: [Transactions Controller]
- *          summary: Update transaction
+ *          summary: Update transaction (for logged in user in specified wallet)
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -138,8 +150,12 @@ router.delete(
  *  /api/wallet/{walletId}/transactions/{transactionId}:
  *      delete:
  *          tags: [Transactions Controller]
- *          summary: Delete transaction
+ *          summary: Delete transaction (for logged in user in specified wallet)
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId

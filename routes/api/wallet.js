@@ -12,12 +12,11 @@ router.post('/', auth, walletController.createWallet);
  *      post:
  *          tags: [Wallet Controller]
  *          summary: Create new wallet
- *          requestBody:
- *              required: true
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/CreateWallet'
+ *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *          responses:
  *              201:
  *                  description: Wallet created
@@ -31,12 +30,6 @@ router.post('/', auth, walletController.createWallet);
  *                  description: Not authorized
  *              409:
  *                  description: Wallet not created, try again
- *              API:
- *                  description: Send to database
- *                  content:
- *                      application/json:
- *                          schema:
- *                              $ref: '#/definitions/WalletAPI'
  */
 
 module.exports = router;
