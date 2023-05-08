@@ -8,7 +8,7 @@ router.post('/', auth, walletController.createWallet);
 
 /**
  *  @swagger
- *  /api/wallet:
+ *  /wallet:
  *      post:
  *          tags: [Wallet Controller]
  *          summary: Create new wallet

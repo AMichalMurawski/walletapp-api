@@ -11,7 +11,7 @@ router.post(
 
 /**
  *  @swagger
- *  /api/wallet/{walletId}/transactions:
+ *  /wallet/{walletId}/transactions:
  *      post:
  *          tags: [Transactions Controller]
  *          summary: Create new transaction (for logged in user in specified wallet)
@@ -63,7 +63,7 @@ router.get(
 
 /**
  *  @swagger
- *  /api/wallet/{walletId}/transactions:
+ *  /wallet/{walletId}/transactions:
  *      get:
  *          tags: [Transactions Controller]
  *          summary: Get all transactions (for logged in user in specified wallet)
@@ -99,7 +99,7 @@ router.patch(
 
 /**
  *  @swagger
- *  /api/wallet/{walletId}/transactions/{transactionId}:
+ *  /wallet/{walletId}/transactions/{transactionId}:
  *      patch:
  *          tags: [Transactions Controller]
  *          summary: Update transaction (for logged in user in specified wallet)
@@ -147,7 +147,7 @@ router.delete(
 
 /**
  *  @swagger
- *  /api/wallet/{walletId}/transactions/{transactionId}:
+ *  /wallet/{walletId}/transactions/{transactionId}:
  *      delete:
  *          tags: [Transactions Controller]
  *          summary: Delete transaction (for logged in user in specified wallet)
