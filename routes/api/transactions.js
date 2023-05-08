@@ -16,6 +16,10 @@ router.post(
  *          tags: [Transactions Controller]
  *          summary: Create new transaction for logged in user in specified wallet
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -64,6 +68,10 @@ router.get(
  *          tags: [Transactions Controller]
  *          summary: Get all transactions for logged in user in specified wallet
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -96,6 +104,10 @@ router.patch(
  *          tags: [Transactions Controller]
  *          summary: Update transaction
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -140,6 +152,10 @@ router.delete(
  *          tags: [Transactions Controller]
  *          summary: Delete transaction
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId

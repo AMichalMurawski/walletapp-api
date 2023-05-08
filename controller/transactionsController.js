@@ -16,8 +16,8 @@ const addTransaction = async (req, res, next) => {
 
   const wallet = await walletService.getWalletById({ _id: walletId });
   if (!wallet) {
-    return res.status(404).json({
-      message: 'Wallet with such id not exist',
+    return res.status(401).json({
+      message: 'User does not owns wallet',
     });
   }
 

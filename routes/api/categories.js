@@ -16,6 +16,10 @@ router.get(
  *          tags: [Transactions Categories]
  *          summary: Get transaction categories
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -51,6 +55,10 @@ router.get(
  *          tags: [Transactions Summary]
  *          summary: Get transactions summary for period
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
