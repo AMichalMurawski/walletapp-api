@@ -16,8 +16,8 @@ const addTransaction = async (req, res, next) => {
 
   const wallet = await walletService.getWalletById({ _id: walletId });
   if (!wallet) {
-    return res.status(404).json({
-      message: 'Wallet with such id not exist',
+    return res.status(401).json({
+      message: 'User does not owns wallet',
     });
   }
 
@@ -228,17 +228,17 @@ const deleteTransaction = async (req, res, next) => {
     });
   }
 
+  await walletService.deleteTransaction({
+    _id: walletId,
+    transactionId,
+  });
+
   const newWallet = await walletService.getWalletById({ _id: walletId });
   const newBalance = newWallet.transactions.reduce(
     (balance, transaction) =>
       balance + calc[transaction.type] * transaction.sum,
     0
   );
-
-  await walletService.deleteTransaction({
-    _id: walletId,
-    transactionId,
-  });
 
   await walletService.updateWalletBalance({
     _id: walletId,

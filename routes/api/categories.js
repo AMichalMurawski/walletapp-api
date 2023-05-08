@@ -14,8 +14,12 @@ router.get(
  *  /api/wallet/{walletId}/transaction-categories:
  *      get:
  *          tags: [Transactions Categories]
- *          summary: Get transaction categories
+ *          summary: Get transaction categories (for logged in user in specified wallet)
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -49,8 +53,12 @@ router.get(
  *  /api/wallet/{walletId}/transactions-summary:
  *      get:
  *          tags: [Transactions Summary]
- *          summary: Get transactions summary for period
+ *          summary: Get transactions summary for period (for logged in user in specified wallet)
  *          parameters:
+ *              -   name: accessToken
+ *                  in: header
+ *                  description: Token assigned to header as bearer-token
+ *                  required: true
  *              -   name: walletId
  *                  in: path
  *                  description: walletId
@@ -65,7 +73,7 @@ router.get(
  *                  required: true
  *          responses:
  *              200:
- *                  description: Transaction deleted
+ *                  description: Transactions sumnmary returned
  *                  content:
  *                      application/json:
  *                          schema:

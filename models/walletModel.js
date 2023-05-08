@@ -109,7 +109,18 @@ module.exports = Wallet;
  *          categorySummary:
  *            type: array
  *            items:
- *              $ref: '#/definitions/Categories'
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: string
+ *                name:
+ *                  type: string
+ *                type:
+ *                  type: array
+ *                  items:
+ *                    string:
+ *                total:
+ *                  type: string
  *          incomeSummary:
  *            type: number
  *          expenseSummary:
@@ -136,6 +147,8 @@ module.exports = Wallet;
  *      Transaction:
  *        type: object
  *        properties:
+ *          id:
+ *            type: string
  *          date:
  *            type: string
  *          type:

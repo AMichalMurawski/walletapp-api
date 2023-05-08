@@ -96,20 +96,31 @@ module.exports = User;
 /**
  * @swagger
  *  definitions:
+ *      UserWallet:
+ *        type: object
+ *        properties:
+ *          id:
+ *            type: string
+ *          role:
+ *            type: string
+ *
  *      User:
  *        type: object
  *        properties:
  *          user:
- *          type: object
- *          properties:
- *            id:
- *              type: objectId
- *            email:
- *              type: string
- *            firstName:
- *              type: string
- *            wallets:
- *              type: array
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: objectId
+ *              email:
+ *                type: string
+ *              firstName:
+ *                type: string
+ *              wallets:
+ *                type: array
+ *                items:
+ *                  $ref: '#/definitions/UserWallet'
+ *
  *
  *      UserLog:
  *        type: object
@@ -123,15 +134,10 @@ module.exports = User;
  *                type: string
  *              firstName:
  *                type: string
- *              wallet:
+ *              wallets:
  *                type: array
  *                items:
- *                  type: object
- *                  properties:
- *                    id:
- *                      type: string
- *                    role:
- *                      type: string
+ *                  $ref: '#/definitions/UserWallet'
  *          accessToken:
  *            type: string
  *      Auth:
