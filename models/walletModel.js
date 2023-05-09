@@ -93,6 +93,8 @@ module.exports = Wallet;
  *      GetTransactions:
  *        type: object
  *        properties:
+ *          balance:
+ *            type: number
  *          transactions:
  *            type: array
  *            items:

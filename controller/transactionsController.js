@@ -103,7 +103,7 @@ const listTransactions = async (req, res, next) => {
     });
   }
 
-  const { owners, transactions } = wallet;
+  const { owners, transactions, balance } = wallet;
 
   const isOwner = owners.find(e => e.id === userId.toString());
   if (!isOwner) {
@@ -112,7 +112,7 @@ const listTransactions = async (req, res, next) => {
     });
   }
 
-  res.status(201).json({ transactions });
+  res.status(201).json({ transactions, balance });
 };
 
 // <===== TRANSACTION UPDATE =====>
