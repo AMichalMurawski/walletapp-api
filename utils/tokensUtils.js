@@ -11,7 +11,7 @@ const generateTokens = async ({ user }) => {
     id: user._id,
     username: user.email,
   };
-  const accessToken = jwt.sign(payload, secretAccess, { expiresIn: '1m' });
+  const accessToken = jwt.sign(payload, secretAccess, { expiresIn: '1h' });
   const refreshToken = jwt.sign(payload, secretRefresh, { expiresIn: '30d' });
 
   const addToken = await userService.updateUser({

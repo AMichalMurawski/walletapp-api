@@ -92,6 +92,7 @@ const addTransaction = async (req, res, next) => {
 // <===== TRANSACTIONS LIST =====>
 
 const listTransactions = async (req, res, next) => {
+  console.log('transactions');
   const { walletId } = req.params;
   const { _id: userId } = req.user;
 

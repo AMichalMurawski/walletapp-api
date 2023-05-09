@@ -56,7 +56,6 @@ const signup = async (req, res, next) => {
       });
     }
 
-    console.log('before wallet');
     const wallet = await walletService.createWallet({
       balance: 0,
       transactions: [],
@@ -64,12 +63,10 @@ const signup = async (req, res, next) => {
       owners: [{ id: user._id, name: user.firstName, role: 'main' }],
     });
 
-    console.log('after wallet');
     await userService.updateUserWallets({
       _id: user._id,
       wallet: { id: wallet._id, role: 'main' },
     });
-    console.log('after user');
 
     const { accessToken, refreshToken } = await tokensUtils.generateTokens({
       user,
@@ -148,7 +145,7 @@ const signin = async (req, res, next) => {
     });
 
     const { firstName, _id } = user;
-    console.log('cookies', refreshToken);
+
     res.cookie('refreshToken', refreshToken, cookieParams);
     res.json({
       user: {
@@ -255,7 +252,6 @@ const refreshTokens = async (req, res, next) => {
     const { tokenDetails } = await tokensUtils.verifyRefreshToken({
       refreshToken,
     });
-    console.log(tokenDetails);
 
     if (!tokenDetails) {
       return res.status(401).json({

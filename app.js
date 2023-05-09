@@ -16,7 +16,7 @@ const app = express();
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 const corsConfig = {
-  origin: false,
+  origin: true,
   credentials: true,
 };
 
