@@ -10,7 +10,6 @@ require('dotenv').config();
 const createWallet = async (req, res, next) => {
   try {
     const { _id: userId } = req.user;
-    console.log('test');
 
     const user = await userService.getUserById({ _id: userId });
     if (!user) {
