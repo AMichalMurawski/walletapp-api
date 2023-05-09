@@ -82,7 +82,7 @@ router.get(
  *                  content:
  *                      application/json:
  *                          schema:
- *                              $ref: '#/definitions/GetTransactions'
+ *                            $ref: '#/definitions/GetTransactions'
  *              400:
  *                  description: Validation error
  *              401:
