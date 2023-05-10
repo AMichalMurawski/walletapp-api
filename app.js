@@ -16,7 +16,7 @@ const app = express();
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 const corsConfig = {
-  origin: true,
+  origin: 'https://flourishing-sherbet-fc5f8a.netlify.app',
   credentials: true,
 };
 
